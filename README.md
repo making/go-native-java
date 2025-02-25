@@ -44,7 +44,6 @@ process time = 4254 [ns/op]
 == Small Input ==
 process time = 696 [ns/op]
 
-
 # JNA
 == Long Input ==
 process time = 4203 [ns/op]
