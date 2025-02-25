@@ -5,13 +5,23 @@ import java.util.function.Function;
 public class DemoRunner {
 
 	public static void run(Function<String, ? extends SuffixArray> factory) {
-		String input = "abracadabra";
-		try (SuffixArray suffixArray = factory.apply(input)) {
-			measure(() -> {
-				suffixArray.searchQuery("ra");
-				suffixArray.searchQuery("ab");
-				suffixArray.searchQuery("br");
-			}, 10000, 10000);
+		{
+			System.out.println("== Long Input ==");
+			String input = "abcdefghijklmnopqrstuvwxyz".repeat(10);
+			try (SuffixArray suffixArray = factory.apply(input)) {
+				measure(() -> {
+					suffixArray.searchQuery("xyzabc");
+				}, 10000, 10000);
+			}
+		}
+		{
+			System.out.println("== Small Input ==");
+			String input = "abracadabra";
+			try (SuffixArray suffixArray = factory.apply(input)) {
+				measure(() -> {
+					suffixArray.searchQuery("br");
+				}, 10000, 10000);
+			}
 		}
 	}
 
@@ -23,7 +33,7 @@ public class DemoRunner {
 		for (int i = 0; i < iterations; i++) {
 			runnable.run();
 		}
-		System.out.println("process time = " + (System.nanoTime() - begin) / iterations + " [ns/ops]");
+		System.out.println("process time = " + (System.nanoTime() - begin) / iterations + " [ns/op]");
 	}
 
 }

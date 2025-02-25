@@ -2,9 +2,9 @@
 
 This project demonstrates how to call a native library written in Go from Java. The Go library implements a SuffixArray (`index/suffixarray`) algorithm with functions to create a suffix array, search for a query string, and free allocated resources. We compare three different Java approaches to calling the native library:
 
+* JNI Implementation: Uses Java’s JNI to call a native wrapper that in turn calls the Go library.
 * JNA Implementation: Uses Java Native Access (JNA) to call the exported functions.
 * FFM Implementation: Uses Java 22+'s Foreign Function & Memory (FFM) API to invoke native functions.
-* JNI Implementation: Uses Java’s JNI to call a native wrapper that in turn calls the Go library.
 
 Additionally, a pure Java implementation is provided for functional comparison.
 
@@ -22,14 +22,14 @@ make -C go jni
 Use Java 23+
 
 ```
+# RUN JNI version
+./run-jni.sh
+
 # Run JNA version
 ./run-jna.sh
 
 # RUN FFM version
 ./run-ffm.sh
-
-# RUN JNI version
-./run-jni.sh
 
 # Run Pure Java version
 ./run-java.sh
@@ -38,15 +38,27 @@ Use Java 23+
 ### Performance Comparison
 
 ```
+# JNI
+== Long Input ==
+process time = 1963 [ns/op]
+== Small Input ==
+process time = 706 [ns/op]
+
 # JNA
-process time = 6577 [ns/ops]
+== Long Input ==
+process time = 4065 [ns/op]
+== Small Input ==
+process time = 2125 [ns/op]
 
 # FFM
-process time = 2203 [ns/ops]
-
-# JNI
-process time = 2090 [ns/ops]
+== Long Input ==
+process time = 1007 [ns/op]
+== Small Input ==
+process time = 741 [ns/op]
 
 # Pure Java
-process time = 517 [ns/ops]
+== Long Input ==
+process time = 428 [ns/op]
+== Small Input ==
+process time = 137 [ns/op]
 ```
