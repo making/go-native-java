@@ -7,7 +7,7 @@ public class DemoRunner {
 	public static void run(Function<String, ? extends SuffixArray> factory) {
 		{
 			System.out.println("== Long Input ==");
-			String input = "abcdefghijklmnopqrstuvwxyz".repeat(10);
+			String input = "abcdefghijklmnopqrstuvwxyz".repeat(20);
 			try (SuffixArray suffixArray = factory.apply(input)) {
 				measure(() -> {
 					suffixArray.searchQuery("xyzabc");

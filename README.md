@@ -40,25 +40,26 @@ Use Java 23+
 ```
 # JNI
 == Long Input ==
-process time = 1963 [ns/op]
+process time = 4254 [ns/op]
 == Small Input ==
-process time = 706 [ns/op]
+process time = 696 [ns/op]
+
 
 # JNA
 == Long Input ==
-process time = 4065 [ns/op]
+process time = 4203 [ns/op]
 == Small Input ==
-process time = 2125 [ns/op]
+process time = 2612 [ns/op]
 
 # FFM
 == Long Input ==
-process time = 1007 [ns/op]
+process time = 1745 [ns/op]
 == Small Input ==
-process time = 741 [ns/op]
+process time = 452 [ns/op]
 
 # Pure Java
 == Long Input ==
-process time = 428 [ns/op]
+process time = 593 [ns/op]
 == Small Input ==
-process time = 137 [ns/op]
+process time = 102 [ns/op]
 ```
