@@ -40,9 +40,9 @@ Use Java 23+
 ```
 # JNI
 == Long Input ==
-process time = 4254 [ns/op]
+process time = 779 [ns/op]
 == Small Input ==
-process time = 696 [ns/op]
+process time = 378 [ns/op]
 
 # JNA
 == Long Input ==

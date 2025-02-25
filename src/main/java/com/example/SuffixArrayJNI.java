@@ -1,8 +1,8 @@
 package com.example;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 public class SuffixArrayJNI implements SuffixArray {
 
@@ -31,14 +31,22 @@ public class SuffixArrayJNI implements SuffixArray {
 
 	/**
 	 * Searches for all occurrences of the query string. The native method returns an
-	 * array of matching suffix strings.
+	 * array of matching indices, which are then used to construct the corresponding
+	 * suffix substrings from the input.
 	 * @param query the query string
 	 * @return a list of matching suffix strings
 	 */
 	@Override
 	public List<String> searchQuery(String query) {
-		String[] arr = nativeSearch(handle, query, input);
-		return (arr == null) ? List.of() : asList(arr);
+		int[] indices = nativeSearch(handle, query);
+		List<String> results = new ArrayList<>();
+		if (indices != null) {
+			for (int idx : indices) {
+				// Create substring from the index.
+				results.add(input.substring(idx));
+			}
+		}
+		return Collections.unmodifiableList(results);
 	}
 
 	/**
@@ -53,7 +61,7 @@ public class SuffixArrayJNI implements SuffixArray {
 	// Native method declarations.
 	private native long nativeCreate(String input);
 
-	private native String[] nativeSearch(long handle, String query, String input);
+	private native int[] nativeSearch(long handle, String query);
 
 	private native void nativeClose(long handle);
 

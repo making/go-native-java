@@ -15,42 +15,33 @@ JNIEXPORT jlong JNICALL Java_com_example_SuffixArrayJNI_nativeCreate
     return (jlong)handle;
 }
 
-// nativeSearch: calls SearchSuffixArray and returns an array of Java strings,
-// where each element is the suffix of the input starting at the index returned by the search.
-JNIEXPORT jobjectArray JNICALL Java_com_example_SuffixArrayJNI_nativeSearch
-  (JNIEnv *env, jobject obj, jlong handle, jstring query, jstring input) {
+// nativeSearch: calls SearchSuffixArray and returns a jintArray of matching indices.
+JNIEXPORT jintArray JNICALL Java_com_example_SuffixArrayJNI_nativeSearch
+  (JNIEnv *env, jobject obj, jlong handle, jstring query) {
     const char *cQuery = (*env)->GetStringUTFChars(env, query, NULL);
     if (cQuery == NULL) {
         return NULL;
     }
+    // Call SearchSuffixArray with the query.
     IntArray* result = SearchSuffixArray((SuffixArrayHandle*)handle, (char*)cQuery, (int)strlen(cQuery));
     (*env)->ReleaseStringUTFChars(env, query, cQuery);
     if (result == NULL) {
         return NULL;
     }
     int len = result->length;
-
-    // Get the original input string as a C string.
-    const char *cInput = (*env)->GetStringUTFChars(env, input, NULL);
-    if (cInput == NULL) {
+    jintArray ret = (*env)->NewIntArray(env, len);
+    if (ret == NULL) {
         FreeIntArray(result);
         return NULL;
     }
-
-    // Allocate a Java String array for the result.
-    jclass stringClass = (*env)->FindClass(env, "java/lang/String");
-    jobjectArray ret = (*env)->NewObjectArray(env, len, stringClass, NULL);
-
-    // For each index in result->data, create a Java string using the substring of cInput.
+    // Copy indices from result->data into a temporary jint array.
     int *indices = result->data;
+    jint *temp = (jint*)malloc(sizeof(jint) * len);
     for (int i = 0; i < len; i++) {
-        int idx = indices[i];
-        // Create a Java string from cInput starting at idx.
-        jstring jstr = (*env)->NewStringUTF(env, cInput + idx);
-        (*env)->SetObjectArrayElement(env, ret, i, jstr);
+        temp[i] = indices[i];
     }
-
-    (*env)->ReleaseStringUTFChars(env, input, cInput);
+    (*env)->SetIntArrayRegion(env, ret, 0, len, temp);
+    free(temp);
     FreeIntArray(result);
     return ret;
 }
