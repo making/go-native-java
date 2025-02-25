@@ -48,7 +48,7 @@ public class SuffixArrayFFM implements SuffixArray {
 		// Using loaderLookup() to find symbols from the shared library.
 		SymbolLookup lookup = SymbolLookup.loaderLookup();
 
-		MemorySegment inputSeg = allocateCString(input, arena);
+		MemorySegment inputSeg = arena.allocateFrom(input);
 		int inputLen = input.getBytes(StandardCharsets.UTF_8).length;
 		MethodHandle createMH = linker.downcallHandle(lookup.find("CreateSuffixArray").orElseThrow(),
 				FunctionDescriptor.of(ValueLayout.JAVA_LONG, ValueLayout.ADDRESS, ValueLayout.JAVA_INT));
@@ -70,19 +70,10 @@ public class SuffixArrayFFM implements SuffixArray {
 		this.dataHandle = INT_ARRAY_LAYOUT.varHandle(PathElement.groupElement("data"));
 	}
 
-	// Utility method: allocate a null-terminated UTF-8 C string in the given Arena.
-	private static MemorySegment allocateCString(String s, Arena arena) {
-		byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
-		MemorySegment seg = arena.allocate(bytes.length + 1);
-		seg.asByteBuffer().put(bytes);
-		seg.set(ValueLayout.JAVA_BYTE, bytes.length, (byte) 0);
-		return seg;
-	}
-
 	@Override
 	public List<String> searchQuery(String query) {
 		List<String> results = new ArrayList<>();
-		MemorySegment querySeg = allocateCString(query, arena);
+		MemorySegment querySeg = arena.allocateFrom(query);
 		int queryLen = query.getBytes(StandardCharsets.UTF_8).length;
 		MemorySegment resultSeg;
 		try {
