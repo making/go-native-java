@@ -1,41 +1,47 @@
 # Java Native Library Calling via Go
 
-This project demonstrates how to call a native library written in Go from Java. The Go library implements a SuffixArray (`index/suffixarray`) algorithm with functions to create a suffix array, search for a query string, and free allocated resources. We compare three different Java approaches to calling the native library:
+This project demonstrates how to call a native library written in Go from Java. The Go library implements a suffix array algorithm (using `index/suffixarray`) with functions to create the suffix array, search for query strings, and free allocated resources. We showcase three different Java approaches for calling the native library:
 
-* JNI Implementation: Uses Java’s JNI to call a native wrapper that in turn calls the Go library.
-* JNA Implementation: Uses Java Native Access (JNA) to call the exported functions.
-* FFM Implementation: Uses Java 22+'s Foreign Function & Memory (FFM) API to invoke native functions.
+* **JNI Implementation:** Uses Java’s JNI to call a native wrapper that in turn invokes the Go library.
+* **JNA Implementation:** Uses Java Native Access (JNA) to call the exported functions directly.
+* **FFM Implementation:** Uses Java 22+’s Foreign Function & Memory (FFM) API to invoke native functions.
 
-Additionally, a pure Java implementation is provided for functional comparison.
+In addition, a pure Java implementation is provided for performance comparison.
 
-## How to run the samples
+## How to Run the Samples
 
-Build the Go shared library (libsuffixarray.dylib).
+### Build the Go Shared Library
 
-```
+Build the Go shared library (`libsuffixarray.dylib`) by running:
+
+```bash
 make -C go gobuild
 
-# If you run the JNI version
+# For the JNI version, also run:
 make -C go jni
 ```
 
-Use Java 23+
+### Run with Java 23+
 
-```
-# RUN JNI version
+Use the provided shell scripts to run the different implementations:
+
+```bash
+# Run the JNI version
 ./run-jni.sh
 
-# Run JNA version
+# Run the JNA version
 ./run-jna.sh
 
-# RUN FFM version
+# Run the FFM version
 ./run-ffm.sh
 
-# Run Pure Java version
+# Run the Pure Java version
 ./run-java.sh
 ```
 
-### Performance Comparison
+## Performance Comparison
+
+Below are the processing times observed for each implementation:
 
 ```
 # JNI
